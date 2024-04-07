@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        @apply outline-none overscroll-contain
+    }
+
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    ::-webkit-scrollbar, ::-webkit-scrollbar-track, ::-webkit-scrollbar-track-piece {
+        @apply bg-transparent w-1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-primary
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    label {
+        @apply font-medium
+    }
+
+    input[type=radio] {
+        @apply accent-primary
+    }
+
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    }
+
+    input, div[contenteditable] {
+        @apply rounded-sm p-2 font-medium text-sm
+    }
+
+    html {
+        font-family: 'Poppins', sans-serif;        
+    }
+
+    [contenteditable][placeholder]:empty:before {
+        content: attr(placeholder);
+        position: absolute;
+        color: gray;
+    }
+
+    select {
+        appearance: none;
+        box-shadow: none;
+    }
+
+    th, td {
+        @apply p-2
+    }
+
+  
+}
+
+@layer components {
+    .hover {
+        @apply bg-secondary hover:bg-primary transition-colors duration-150
+    }
+
+    .skeleton {
+        @apply bg-black/25 animate-pulse rounded-full
+    }
+
+    .unactive p, .active p {
+        @apply transition-opacity duration-500
+    }
+    
+    .unactive p {
+        opacity: 0
+    }
+
+    .active p {
+        opacity: 1
+    }
+}

@@ -1,0 +1,162 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
+  name String
+  password String
+  tokens tokens?
+  carts carts[]
+  transactions transactions[]
+  ratings ratings[]
+  // orders orders[]
+  roles Roles @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model categories {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+  productIds String[] @db.ObjectId
+  products products[] @relation(fields: [productIds], references: [id]) // many to many
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model products {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  sub String
+  images String[]
+  weight Int
+  stock Int? @default(0)
+  published Boolean @default(false)
+  price Int? @default(0)
+  description String @default("Product doesn't have description")
+  categoryIds String[] @db.ObjectId
+  categories categories[] @relation(fields: [categoryIds], references: [id])
+  ratings ratings[]
+  carts carts[]
+  // orders orders[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index(fields: [name])
+}
+
+model ratings {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user users @relation(fields: [userId], references: [id])
+  productId String @db.ObjectId
+  product products @relation(fields: [productId], references: [id])
+  content String
+  rate Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index(fields: [rate, productId])
+}
+
+model carts {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user users @relation(fields: [userId], references: [id])
+  productId String @db.ObjectId
+  product products @relation(fields: [productId], references: [id])
+  quantity Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([productId, userId])
+}
+
+// model orders {
+//   id String @id @default(auto()) @map("_id") @db.ObjectId
+//   productId String @db.ObjectId
+//   product products @relation(fields: [productId], references: [id])
+//   userId String @db.ObjectId
+//   user users @relation(fields: [userId], references: [id])
+//   transactionsId String @db.ObjectId
+//   transactions transactions @relation(fields: [transactionsId], references: [id])
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now()) @updatedAt
+// }
+
+model transactions {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  orderId String @unique
+  userId String @db.ObjectId
+  user users @relation(fields: [userId], references: [id])
+  products ProductsTransaction[]
+  total Int
+  status Status @default(CREATED)
+  method String
+  paymentStatus String
+  midtransResponse Json
+  shippingAddress ShippingAddress
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model tokens {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId @unique
+  user users @relation(fields: [userId], references: [id])
+  token String?
+  expired DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+enum Roles {
+  ADMIN
+  USER
+}
+
+enum Status {
+  CANCEL
+  CREATED
+  PENDING
+  CONFIRMED
+  SHIP
+  SUCCESS
+}
+
+type ProductsTransaction {
+  id String @map("_id") @db.ObjectId
+  images String[]
+  weight Int
+  name String
+  price Int @default(0)
+  quantity Int @default(0)
+  description String? @default("Product doesn't have description")
+  categories Category[]
+  isRated Boolean @default(false)
+}
+
+type Category {
+  id String
+  name String
+}
+
+type ShippingAddress {
+  first_name String
+  email String
+  phone String
+  province String
+  city String
+  postal_code Int
+  address String
+}

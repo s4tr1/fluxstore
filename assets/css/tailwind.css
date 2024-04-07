@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        /* @apply outline-none overscroll-contain scroll-smooth */
+        @apply outline-none scroll-smooth
+    }
+
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    ::-webkit-scrollbar, ::-webkit-scrollbar-track, ::-webkit-scrollbar-track-piece {
+        @apply bg-transparent w-1 h-1;
+    }
+
+    a {
+        @apply cursor-pointer
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-primary
+    }
+
+    input, div[contenteditable] {
+        @apply bg-black/10 rounded-sm p-2
+    }
+
+    input[type=number]::-webkit-inner-spin-button {
+        appearance: none;
+    }
+
+    html {
+        font-family: 'Open Sans', 'Roboto', sans-serif;        
+    }
+
+    [contenteditable][placeholder]:empty:before {
+        content: attr(placeholder);
+        position: absolute;
+        color: gray;
+    }
+
+    th, td {
+        @apply p-2
+    }
+
+    input[type=radio] {
+        @apply accent-primary p-1
+    }
+
+    ol, ul {
+        @apply pl-8
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+
+    ul {
+        list-style-type: disc;
+    }
+}
+
+@layer components {
+    .hover {
+        @apply bg-secondary hover:bg-primary transition-colors duration-150 text-white
+    }
+
+    .skeleton {
+        @apply bg-black/25 animate-pulse rounded-full
+    }
+
+    .hidden-scrollbar::-webkit-scrollbar {
+        @apply hidden;
+    }
+}

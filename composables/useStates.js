@@ -1,0 +1,1 @@
+export const useUnauthenticated = () => useState("unauthenticated", () => false);
